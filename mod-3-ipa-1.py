@@ -4,9 +4,6 @@ Thinking Like a Programmer
 
 This assignment covers your intermediate proficiency with Python.
 '''
-
-from dataclasses import asdict
-from imp import new_module
 import math
 
 def shift_letter(letter, shift):
@@ -45,16 +42,22 @@ def shift_letter(letter, shift):
     alphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
 
     if shift == "_": 
+        print(letter)
         return letter
+    elif letter == " ":
+        print("space")
+        return " "
     elif (alphabet.index(letter) + shift) > 25:
         factor = math.floor((alphabet.index(letter) + shift)/ 26)
         new_index = alphabet.index(letter) + shift - (factor*26)
+        print(alphabet[new_index])
         return alphabet[new_index]
     else: 
         new_index = alphabet.index(letter) + shift
+        print(alphabet[new_index])
         return alphabet[new_index]
 
-# shift_letter("X", 104)
+# shift_letter(" ", 104)
 
 def caesar_cipher(message, shift):
     '''Caesar Cipher. 
@@ -79,7 +82,7 @@ def caesar_cipher(message, shift):
 
     new_message = ""
     for m in message:
-        if m == " ":
+        if m == " " or shift == "_":
             shifted_letter = shift_letter(m, "_")
             new_message += shifted_letter
         else:
@@ -89,8 +92,7 @@ def caesar_cipher(message, shift):
     print(new_message)
     return new_message
 
-
-# caesar_cipher("HELLO WORLD", 3)
+# caesar_cipher("THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG", "_")
 
 def shift_by_letter(letter, letter_shift):
     '''Shift By Letter. 
@@ -123,17 +125,22 @@ def shift_by_letter(letter, letter_shift):
     alphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
 
     if letter_shift == "_": 
+        print(letter)
         return letter
+    elif letter == " ":
+        print("space")
+        return " "
     elif (alphabet.index(letter) + alphabet.index(letter_shift)) > 25:
         factor = math.floor((alphabet.index(letter) + alphabet.index(letter_shift))/ 26)
         new_index = alphabet.index(letter) + alphabet.index(letter_shift) - (factor*26)
+        print(alphabet[new_index])
         return alphabet[new_index]
     else: 
         new_index = alphabet.index(letter) + alphabet.index(letter_shift)
+        print(alphabet[new_index])
         return alphabet[new_index]
 
-# shift_by_letter("B", "K")
-
+# shift_by_letter("N", "N")
 
 def vigenere_cipher(message, key):
     '''Vigenere Cipher. 
@@ -167,43 +174,40 @@ def vigenere_cipher(message, key):
     # Replace `pass` with your code. 
     # Stay within the function. Only use the parameters as input. The function should return your answer.
 
-    m_length = len(message)
+    message_without_spaces = message.replace(" ", "")
+    m_length = len(message_without_spaces)
     k_length = len(key)
 
     new_message = ""
 
     if m_length > k_length: 
         factor = math.floor(m_length / k_length)
-        
+
         new_key = key.join([key]*factor)
 
-        new_key = new_key[:-(m_length - (k_length * factor) - 1)] 
+        sobra = len(new_key) - m_length
 
-        for index_m, m in enumerate(message):
+        new_key = new_key[:-sobra] 
+        
+        print(new_key)
+
+        for index_m, m in enumerate(message_without_spaces):
             for index_k, k in enumerate(new_key):
-                if (index_m == index_k):    
-                    if m == " ":
-                        shifted_letter = shift_by_letter(m, "_")
-                        new_message += shifted_letter
-                    else:                        
-                        shifted_letter = shift_by_letter(m, k)
-                        new_message += shifted_letter
+                if (index_m == index_k):                    
+                    shifted_letter = shift_by_letter(m, k)
+                    new_message += shifted_letter
     else: 
-        for index_m, m in enumerate(message):
+        for index_m, m in enumerate(message_without_spaces):
             for index_k, k in enumerate(key):
                 if (index_m == index_k):    
-                    if m == " ":
-                        shifted_letter = shift_by_letter(m, "_")
-                        new_message += shifted_letter
-                    else:                        
-                        shifted_letter = shift_by_letter(m, k)
-                        new_message += shifted_letter
+                    shifted_letter = shift_by_letter(m, k)
+                    new_message += shifted_letter
 
     
     print(new_message)
     return new_message
 
-# vigenere_cipher("LONGTEXT", "KEY")
+# vigenere_cipher("MICHIGAN TECHNOLOGICAL UNIVERSITY", "HOUGHTON")
 
 def scytale_cipher(message, shift):
     '''Scytale Cipher.
@@ -234,7 +238,7 @@ def scytale_cipher(message, shift):
         For each index i in the encoded message, use the character at the index
         (i // shift) + (len(message) // shift) * (i % shift) of the raw message. 
         If this number doesn't make sense, you can play around with the cipher at
-         https://dencode.com/en/cipher/scytale to try to understand it.
+        https://dencode.com/en/cipher/scytale to try to understand it.
     4. Return the encoded message. In this case, 
         the output should be "IMNNA_FTAOIGROE".
 
